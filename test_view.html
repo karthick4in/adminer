@@ -1,0 +1,186 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="icon" href="pmd/images/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="pmd/images/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" type="text/css" href="pmd/styles/default/style1.css" />
+    <title>Designer</title>
+    <script src="https://cdn.jsdelivr.net/npm/ejs@3.1.9/ejs.min.js "></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.2/FileSaver.min.js"></script>
+
+    <script src="pmd/scripts/ajax.js" type="text/javascript"></script>
+    <script src="pmd/scripts/move.js" type="text/javascript"></script>
+    <script src="pmd/data1.js" type="text/javascript"></script>
+    <script src="pmd/data.js" type="text/javascript"></script>
+    <!--[if IE]>
+    <script src="pmd/scripts/iecanvas.js" type="text/javascript"></script>
+    <![endif]-->
+</head>
+
+<body onload="Main_init()" class="general_body" id="pmd_body">
+
+    <div class="header" id="top_menu">
+        <a href="javascript:Show_left_menu(document.getElementById('key_Show_left_menu'));" onmousedown="return false;"
+            class="M_butt first" target="_self">
+            <img id='key_Show_left_menu' title="Show/Hide left menu" alt="v" src="pmd/images/downarrow2_m.png" /></a>
+        <a href="javascript:Save2();" onmousedown="return false;" class="M_butt" target="_self"><img
+                title="Save position" src="pmd/images/save.png" alt="" /></a><a href="javascript:Start_table_new();"
+            onmousedown="return false;" class="M_butt" target="_self"><img title="Create table"
+                src="pmd/images/table.png" alt="" /></a><a href="javascript:Start_relation();"
+            onmousedown="return false;" class="M_butt" id="rel_button" target="_self"><img title="Create relation"
+                src="pmd/images/relation.png" alt="" /></a><a href="javascript:Start_display_field();"
+            onmousedown="return false;" class="M_butt" id="display_field_button" target="_self"><img
+                title="Choose field to display" src="pmd/images/display_field.png" alt="" /></a><a
+            href="javascript:location.reload();" onmousedown="return false;" class="M_butt" target="_self"><img
+                title="Reload" src="pmd/images/reload.png" alt="" /></a><a href="javascript:Help();"
+            onmousedown="return false;" class="M_butt" target="_self"><img title="Help" src="pmd/images/help.png"
+                alt="" /></a><img class="M_bord" src="pmd/images/bord.png" alt="" /><a
+            href="javascript:Angular_direct();" onmousedown="return false;" class="M_butt" id="angular_direct_button"
+            target="_self"><img title="Angular links / Direct links" src="pmd/images/ang_direct.png" alt="" /></a><a
+            href="javascript:Grid();" onmousedown="return false;" class="M_butt" id="grid_button" target="_self"><img
+                title="Snap to grid" src="pmd/images/grid.png" alt="" /></a><img class="M_bord"
+            src="pmd/images/bord.png" alt="" /><a
+            href="javascript:Small_tab_all(document.getElementById('key_SB_all'));" onmousedown="return false;"
+            class="M_butt" target="_self"><img id='key_SB_all' title="Small/Big All" alt="v"
+                src="pmd/images/downarrow1.png" /></a><a href="javascript:Small_tab_invert();"
+            onmousedown="return false;" class="M_butt" target="_self"><img title="Toggle small/big" alt="key"
+                src="pmd/images/bottom.png" /></a><img class="M_bord" src="pmd/images/bord.png" alt="" /><a
+            href="javascript:PDF_save();" onmousedown="return false;" class="M_butt" target="_self"><img
+                src="pmd/images/pdf.png" alt="key" width="20" height="20"
+                title="Import/Export coordinates for PDF schema" /></a>
+        <a href="javascript:Top_menu_right(document.getElementById('key_Left_Right'));" onmousedown="return false;"
+            class="M_butt last" target="_self">
+            <img src="pmd/images/2rightarrow_m.png" id="key_Left_Right" alt=">" title="Move Menu" /></a>
+    </div>
+
+    <div id="osn_tab">
+        <CANVAS id="canvas" width="100" height="100" onclick="Canvas_click(this)"></CANVAS>
+    </div>
+
+    <div id="mainContainer">
+    </div>
+
+    <div id="hint"></div>
+    <div id='layer_action' style="visibility:hidden;">Load...</div>
+
+    <!-- Crate realtion work-->
+    <table id="layer_new_relation" style="visibility:hidden;" width="5%" border="0" cellpadding="0" cellspacing="0">
+        <tbody>
+            <tr>
+                <td class="frams1" width="10px"></td>
+                <td class="frams5" width="99%"></td>
+                <td class="frams2" width="10px">
+                    <div class="bor"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="frams8"></td>
+                <td class="input_tab">
+                    <table width="168" border="0" align="center" cellpadding="2" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <td colspan="2" align="center" nowrap="nowrap"><strong>Create relation</strong></td>
+                            </tr>
+                        </thead>
+                        <tbody id="foreign_relation">
+                            <tr>
+                                <td colspan="2" align="center" nowrap="nowrap"><strong>FOREIGN KEY</strong></td>
+                            </tr>
+                            <tr>
+                                <td width="58" nowrap="nowrap">on delete</td>
+                                <td width="102"><select name="on_delete" id="on_delete">
+                                        <option value="nix" selected="selected">--</option>
+                                        <option value="CASCADE">CASCADE</option>
+                                        <option value="SET NULL">SET NULL</option>
+                                        <option value="NO ACTION">NO ACTION</option>
+                                        <option value="RESTRICT">RESTRICT</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td nowrap="nowrap">on update</td>
+                                <td><select name="on_update" id="on_update">
+                                        <option value="nix" selected="selected">--</option>
+                                        <option value="CASCADE">CASCADE</option>
+                                        <option value="SET NULL">SET NULL</option>
+                                        <option value="NO ACTION">NO ACTION</option>
+                                        <option value="RESTRICT">RESTRICT</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody>
+                            <tr>
+                                <td colspan="2" align="center" nowrap="nowrap">
+                                    <input type="button" class="butt" name="Button" value="OK"
+                                        onclick="New_relation()" />
+                                    <input type="button" class="butt" name="Button" value="Cancel"
+                                        onclick="document.getElementById('layer_new_relation').style.visibility = 'hidden';" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+                <td class="frams6"></td>
+            </tr>
+            <tr>
+                <td class="frams4">
+                    <div class="bor"></div>
+                </td>
+                <td class="frams7"></td>
+                <td class="frams3"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Delete realtion work -->
+    <table id="layer_upd_relation" style="visibility:hidden;" width="5%" border="0" cellpadding="0" cellspacing="0">
+        <tbody>
+            <tr>
+                <td class="frams1" width="10px"></td>
+                <td class="frams5" width="99%"></td>
+                <td class="frams2" width="10px">
+                    <div class="bor"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="frams8"></td>
+                <td class="input_tab">
+                    <table width="100%" border="0" align="center" cellpadding="2" cellspacing="0">
+                        <tr>
+                            <td colspan="3" align="center" nowrap="nowrap"><strong>Delete relation</strong></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" align="center" nowrap="nowrap">
+                                <input name="Button" type="button" class="butt" onclick="Upd_relation()"
+                                    value="Delete" />
+                                <input type="button" class="butt" name="Button" value="Cancel"
+                                    onclick="document.getElementById('layer_upd_relation').style.visibility = 'hidden'; Re_load();" />
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td class="frams6"></td>
+            </tr>
+            <tr>
+                <td class="frams4">
+                    <div class="bor"></div>
+                </td>
+                <td class="frams7"></td>
+                <td class="frams3"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- cache images -->
+    <img src="pmd/images/2leftarrow_m.png" width="0" height="0" alt="" />
+    <img src="pmd/images/rightarrow1.png" width="0" height="0" alt="" />
+    <img src="pmd/images/rightarrow2.png" width="0" height="0" alt="" />
+    <img src="pmd/images/uparrow2_m.png" width="0" height="0" alt="" />
+</body>
+
+</html>
