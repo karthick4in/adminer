@@ -112,6 +112,9 @@ renderTabelDom = function () {
 }
 
 relationLinks = function () {
+    var relation = JSON.parse(localStorage.relation || '[]' ) 
+    DATA_SOURCE.relation = [ ...DATA_SOURCE.relation, ...relation];
+    
     for (rel of DATA_SOURCE.relation) {
         console.log(rel)
         var db_tbl_name = 'test.' + rel["foreign_table"];
