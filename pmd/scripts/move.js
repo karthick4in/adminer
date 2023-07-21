@@ -580,13 +580,42 @@ function Click_field(T, f, PK) // table field
     }
 }
 
+function  saveRelation() {
+    valtempJson= [];
+    for (b of   link_relation.split("&"))
+     valtempJson.push( b.split("=").join('":"'))
+    relationJson  = JSON.parse(  '{"'+valtempJson.join('","') +'"}'  ) 
+    console.log(relationJson)
+ var relationObj = {};
+    // {foreign_db: "kanri",foreign_field: "id",foreign_table: "acc_tags",master_db: "kanri",master_field: "tag_id",master_table: "acc_entries"}
+    relationObj["foreign_db"] = db;
+    relationObj["foreign_table"] = relationJson["T2"];
+    relationObj["foreign_field"] = relationJson["F2"];
+    relationObj["master_db"] = db;
+    relationObj["master_table"] = relationJson["T1"];
+    relationObj["master_field"] = relationJson["F1"];
+
+    var existRelationStr  = localStorage.relation || '[]';
+    var RelationJSON  = JSON.parse(existRelationStr)
+    RelationJSON.push(relationObj)
+debugger;
+    console.log(RelationJSON)
+    localStorage.setItem("relation", JSON.stringify(RelationJSON))
+    
+debugger;
+    console.log(localStorage.relation)
+    
+}
+
 function New_relation()
 {
+    saveRelation(link_relation)
     document.getElementById('layer_new_relation').style.visibility = 'hidden';
     link_relation += '&server=' + server + '&db=' + db + '&token=' + token + '&die_save_pos=0';
     link_relation += '&on_delete=' + document.getElementById('on_delete').value + '&on_update=' + document.getElementById('on_update').value;
     link_relation += Get_url_pos();
 
+        
     //alert(link_relation);
     makeRequest('pmd_relation_new.php', link_relation);
 }
